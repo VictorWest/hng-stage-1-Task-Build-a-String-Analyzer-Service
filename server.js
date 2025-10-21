@@ -89,16 +89,7 @@ app.get('/strings/filter-by-natural-language', (req, res) => {
             return res.status(422).json({ message: "Query parsed but resulted in conflicting filters" })
         }
 
-        const results = stringValuesArray.filter(item => {
-            console.log(item)
-            if (parsedFilters.is_palindrome && !item.properties.is_palindrome) return false
-            if (parsedFilters.min_length && item.properties.length < parsedFilters.min_length) return false
-            if (parsedFilters.max_length && item.properties.length > parsedFilters.max_length) return false
-            if (parsedFilters.word_count && item.properties.word_count !== parsedFilters.word_count) return false
-            if (parsedFilters.contains_character && !item.value.includes(parsedFilters.contains_character)) return false
-            
-            return true
-        })
+        const results = applyFilters(stringValuesArray, parsedFilters)
 
         const finalResult =  {
             "data": results,
